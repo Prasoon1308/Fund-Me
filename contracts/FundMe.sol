@@ -17,7 +17,7 @@ contract FundMe {
     address private immutable i_owner;
     address[] private s_funders;
     mapping(address => uint256) private s_addressToAmountFunded;
-    AggregatorV3Interface private s_priceFeed;
+    AggregatorV3Interface private s_priceFeed; // to determine the conversion pricefeed of the chain
 
     modifier onlyOwner() {
         if (msg.sender != i_owner) revert FundMe__NotOwner();
@@ -34,7 +34,7 @@ contract FundMe {
         require(
             msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
             "You need to spend more ETH!"
-        ); // Using getConversionRate from PriceConverter contract
+        ); // Using getConversionRate from PriceConverter contract by passing s_pricefeed as arg which will show the chain
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
     }
